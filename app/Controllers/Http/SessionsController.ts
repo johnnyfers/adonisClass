@@ -5,8 +5,10 @@ export default class SessionsController {
         const { email, password } = request.all()
 
         try {
-            const token = await auth.use('web').attempt(email, password)
-            return response.json(token)
+            const token = await auth.use('api').attempt(email, password, {
+                expiresIn: '7days'
+            })
+            return token
         } catch {
             return response.badRequest('Invalid credentials')
         }
