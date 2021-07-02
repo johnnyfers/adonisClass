@@ -32,4 +32,10 @@ export default class FilesController {
       return response.status(err.status).send('upload error')
     }
   }
+
+  async show({ response, params }: HttpContextContract) {
+    const file = await File.findOrFail(params.id)
+
+    return response.download(Application.tmpPath(`uploads/${file.file}`))
+  }
 }
