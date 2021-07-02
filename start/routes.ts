@@ -7,3 +7,5 @@ Route.post('sessions', 'SessionsController.store')
 
 Route.post('reset', 'ForgotPasswordsController.store')
 Route.put('reset', 'ForgotPasswordsController.update')
+
+Route.post('files', 'FilesController.store')
