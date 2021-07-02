@@ -22,17 +22,14 @@ export default class User extends BaseModel {
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: false })
-  public TokenCreatedAt: DateTime
+  @column.dateTime({ autoCreate: true })
+  public tokenCreatedAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
   @hasOne(() => Token)
   public token: HasOne<typeof Token>
-    tokenCreatedAt: Date
-
-  
 
   @beforeSave()
   public static async hashPassword(user: User) {
