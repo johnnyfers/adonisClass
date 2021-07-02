@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, computed } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, computed, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import Env from '@ioc:Adonis/Core/Env'
+import Task from './Task'
 
 export default class File extends BaseModel {
   @column({ isPrimary: true })
@@ -23,6 +24,9 @@ export default class File extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @hasMany(() => Task)
+  public tasks: HasMany<typeof Task>
 
   @computed()
   public get url(){
