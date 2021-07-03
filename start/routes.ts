@@ -13,5 +13,6 @@ Route.group(() => {
     Route.post('files', 'FilesController.store')
 
     Route.resource('projects', 'ProjectsController').apiOnly()
-}).middleware('auth')
+    Route.resource('projects.tasks', 'TasksController').apiOnly()
+}).middleware(['auth'])
 

@@ -9,7 +9,7 @@ export default class Tasks extends BaseSchema {
       table
         .integer('project_id')
         .unsigned()
-        .references('id').inTable('users')
+        .references('id').inTable('projects')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
         .notNullable()

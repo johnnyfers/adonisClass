@@ -1,8 +1,6 @@
 import test from 'japa'
-
 import User from '../app/Models/User'
 import Database from '@ioc:Adonis/Lucid/Database'
-
 
 test.group('Welcome', (group) => {
 
@@ -37,5 +35,4 @@ test.group('Welcome', (group) => {
 
         assert.notEqual(user.password, 'secret')
     })
-
 })
