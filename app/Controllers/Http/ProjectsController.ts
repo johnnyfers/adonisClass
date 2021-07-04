@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { schema } from '@ioc:Adonis/Core/Validator'
 
+import ProjectValidator from '../../Validators/ProjectValidator'
 import Project from 'App/Models/Project'
 
 export default class ProjectsController {
@@ -12,15 +12,10 @@ export default class ProjectsController {
 
   public async store({ request, response, auth }: HttpContextContract) {
     try {
-      const newProjectSchema = schema.create({
-        title: schema.string({ trim: true }),
-        description: schema.string({ trim: true })
-      })
-
-      const payload = await request.validate({ schema: newProjectSchema })
+      const payload = await request.validate(ProjectValidator)
       const project = await Project.create({ ...payload, userId: auth.user?.id })
 
-      return response.status(201).json(project)
+      return project
 
     } catch (err) {
       return response.badRequest(err.messages)
@@ -45,18 +40,13 @@ export default class ProjectsController {
     try {
       const project = await Project.findOrFail(params.id)
 
-      const projectUpdatedSchema = schema.create({
-        title: schema.string({ trim: true }),
-        description: schema.string({ trim: true })
-      })
-
-      const payload = await request.validate({ schema: projectUpdatedSchema })
+      const payload = await request.validate(ProjectValidator)
 
       project.merge(payload)
 
       await project.save()
 
-      return response.status(203).json(project)
+      return project
 
     } catch (err) {
       return response.badRequest(err.messages)
