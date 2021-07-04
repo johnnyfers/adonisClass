@@ -10,10 +10,10 @@ export default class TasksController {
   }
 
   public async create({ }: HttpContextContract) {
-    
+
   }
 
-  public async store({ request, params}: HttpContextContract) {
+  public async store({ request, params }: HttpContextContract) {
     const data = request.only([
       'user_id',
       'title',
@@ -22,7 +22,7 @@ export default class TasksController {
       'file_id'
     ])
 
-    const task = await Task.create({ ...data, projectId: params.project_id})
+    const task = await Task.create({ ...data, projectId: params.project_id })
 
     return task
   }
@@ -33,7 +33,7 @@ export default class TasksController {
     return task
   }
 
-  public async update({ request, params}: HttpContextContract) {
+  public async update({ request, params }: HttpContextContract) {
     const task = await Task.findOrFail(params.id)
 
     const data = request.only([
@@ -45,13 +45,13 @@ export default class TasksController {
     ])
 
     task.merge(data)
-    
+
     await task.save()
 
     return task
   }
 
-  public async destroy({ request, params}: HttpContextContract) {
+  public async destroy({ params }: HttpContextContract) {
     const task = await Task.findOrFail(params.id)
 
     await task.delete()

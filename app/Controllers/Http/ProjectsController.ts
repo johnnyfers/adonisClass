@@ -1,45 +1,78 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { schema } from '@ioc:Adonis/Core/Validator'
+
 import Project from 'App/Models/Project'
 
 export default class ProjectsController {
-  public async index({ response }: HttpContextContract) {
-    const projects = await Project.all()
+  public async index({ }: HttpContextContract) {
+    let projects = await Project.all()
 
-    return response.send(projects)
+    return projects
   }
 
   public async store({ request, response, auth }: HttpContextContract) {
-    const data = request.only(['title', 'description'])
-    const project = await Project.create({ ...data, userId: auth.user?.id })
+    try {
+      const newProjectSchema = schema.create({
+        title: schema.string({ trim: true }),
+        description: schema.string({ trim: true })
+      })
 
-    return response.status(201).json(project)
+      const payload = await request.validate({ schema: newProjectSchema })
+      const project = await Project.create({ ...payload, userId: auth.user?.id })
+
+      return response.status(201).json(project)
+
+    } catch (err) {
+      return response.badRequest(err.messages)
+    }
   }
 
-  public async show({ response, params  }: HttpContextContract) {
-    const project = await Project.findOrFail(params.id)
+  public async show({ response, params }: HttpContextContract) {
+    try {
+      const project = await Project.findOrFail(params.id)
 
-    await project.load('user')
-    await project.load('tasks')
+      await project.load('user')
+      await project.load('tasks')
 
-    return response.status(200).json(project)
+      return response.status(200).json(project)
+
+    } catch (err) {
+      response.badRequest(err.messages)
+    }
   }
 
-  public async update({ params, request, response}: HttpContextContract) {
-    const project = await Project.findOrFail(params.id)
-    const data = request.only(['titles', 'description'])
+  public async update({ params, request, response }: HttpContextContract) {
+    try {
+      const project = await Project.findOrFail(params.id)
 
-    project.merge(data)
+      const projectUpdatedSchema = schema.create({
+        title: schema.string({ trim: true }),
+        description: schema.string({ trim: true })
+      })
 
-    await project.save()
+      const payload = await request.validate({ schema: projectUpdatedSchema })
 
-    return response.status(203).json(project)
+      project.merge(payload)
+
+      await project.save()
+
+      return response.status(203).json(project)
+
+    } catch (err) {
+      return response.badRequest(err.messages)
+    }
   }
 
-  public async destroy({ params, response}: HttpContextContract) {
-    const project = await Project.findOrFail(params.id)
+  public async destroy({ params, response }: HttpContextContract) {
+    try {
+      const project = await Project.findOrFail(params.id)
 
-    await project.delete()
+      await project.delete()
 
-    return response.status(200).json(project)
+      return response.status(200).json(project)
+
+    } catch (err) {
+      response.badRequest(err.messages)
+    }
   }
 }

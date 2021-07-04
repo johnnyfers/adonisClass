@@ -1,6 +1,10 @@
 import test from 'japa'
 import User from '../app/Models/User'
 import Database from '@ioc:Adonis/Lucid/Database'
+import UsersController from 'App/Controllers/Http/UsersController'
+
+
+let controller  = new UsersController()
 
 test.group('Welcome', (group) => {
 
