@@ -4,10 +4,14 @@ import ProjectValidator from '../../Validators/ProjectValidator'
 import Project from 'App/Models/Project'
 
 export default class ProjectsController {
-  public async index({ }: HttpContextContract) {
-    let projects = await Project.all()
+  public async index({ request }: HttpContextContract) {
+    const { page } = request.qs()
 
-    return projects
+    const projects = await Project.query().preload('user').paginate(page, 10)
+
+    const projectsJSON = projects.serialize()
+
+    return projectsJSON
   }
 
   public async store({ request, response, auth }: HttpContextContract) {

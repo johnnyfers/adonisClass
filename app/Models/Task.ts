@@ -1,10 +1,13 @@
+import { afterCreate, BaseModel, beforeUpdate, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+
+import TaskListener from '../Listeners/TaskListener'
 import User from './User'
 import Project from './Project'
 import File from './File'
 
 export default class Task extends BaseModel {
+
   @column({ isPrimary: true })
   public id: number
 
@@ -40,4 +43,18 @@ export default class Task extends BaseModel {
 
   @belongsTo(() => File)
   public file: BelongsTo<typeof File>
+
+  @afterCreate()
+  public static async newTaskAfterCreate(task: Task) {
+    const taskListener = new TaskListener()
+
+    taskListener.onNewTask(task)
+  }
+
+  @beforeUpdate()
+  public static async newTaskBeforeUpdate(task: Task) {
+    const taskListener = new TaskListener()
+
+    taskListener.onNewTask(task)
+  }
 }

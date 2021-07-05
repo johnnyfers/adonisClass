@@ -5,7 +5,7 @@ export default class TaskValidator {
 	constructor(protected ctx: HttpContextContract) { }
 
 	public schema = schema.create({
-		user_id: schema.number(),
+		user_id: schema.number.optional(),
 		file_id: schema.number(),
 		title: schema.string(),
 		description: schema.string(),
