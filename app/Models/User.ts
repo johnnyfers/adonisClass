@@ -4,6 +4,7 @@ import { BaseModel, beforeSave, column, HasMany, hasMany } from '@ioc:Adonis/Luc
 import Token from './Token'
 import Project from './Project'
 import Task from './Task'
+import UserAddress from './UserAddress'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -32,6 +33,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => Token)
   public tokens: HasMany<typeof Token>
+
+  @hasMany(() => UserAddress)
+  public addresses: HasMany<typeof UserAddress>
 
   @hasMany(() => Project)
   public project: HasMany<typeof Project>
